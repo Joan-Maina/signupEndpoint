@@ -1,8 +1,13 @@
-const express = require("express");
+const express = require("express"); 
+const jwt = require("jsonwebtoken");
 const { v4: uuidv4 } = require("uuid");
-const { signUpValidation, encryptPassword } = require("./helpers")
+
+require('dotenv').config();
 
 const app = express();
+
+const { signUpValidation, encryptPassword } = require("./helpers")
+
 
 app.use(express.json())
 
@@ -23,9 +28,12 @@ app.post('/auth/register', async (req, res) => {
   
     try {
       users.push({id, email, username, pass});
-  
-      res.status(201).send({ message: "User registered successfully" });
-      console.log(users);
+
+      jwt.sign({ username, email, id }, process.env.SECRETKEY, (err, token) => {
+        if (err) return res.status(500).json({ message: "Internal Server Error" });
+        return res.status(200).json({ token, message: "User registered successfully" });
+      });
+
     } catch (err) {
       res.status(500).send({ message: "Internal Server Error" });
     }
