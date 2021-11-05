@@ -53,7 +53,8 @@ app.post('/auth/login', async(req, res) => {
       return res.status(401).json({message: 'no such user exists'});
 
     }else{
-      console.log(user.pass)
+      console.log(user.pass);
+      
       let auth = await bcrypt.compare(password, user.pass)
        
 console.log(auth);
@@ -65,7 +66,7 @@ console.log(auth);
   //   if (err) return res.status(500).json({ message: "Internal Server Error" });
   //   return res.status(200).json({ token, message: "User registered successfully" });
   // });
-  jwt.sign({ email: user.email, username: user.username, password: user.password }, process.env.SECRETKEY, (err, token) => {
+  jwt.sign({ email: user.email, username: user.username}, process.env.SECRETKEY, (err, token) => {
     return res.status(200).json({
       message: "login sucessful",
       token
